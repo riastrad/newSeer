@@ -4,7 +4,13 @@
 # @Date:   06-Mar-2017 14:03
 # @Email:  josh.erb@excella.com
 # @Last modified by:   josh.erb
-# @Last modified time: 06-Mar-2017 14:03
+# @Last modified time: 14-Mar-2017 13:03
+#
+# Code to pull data files down from EC2 instance:
+#
+# scp -i "Data-Ingester.pem" -r ubuntu@35.165.12.174:~/data/ <destination path>
+#
+# to function as is, must be run in ~/repos/.aws directory
 
 """
 Quick script to clean up .csv data that was pulled from RSS feeds (ref: eater.py)
@@ -19,6 +25,7 @@ Will clean files in place and leave them in the ./data folder - after which the
 
 import os
 import ftfy
+import pandas as pd
 from glob import glob
 from tqdm import tqdm
 from bs4 import BeautifulSoup
@@ -52,7 +59,7 @@ def clean_title(df, col=4):
     dataframe with the regex errors cleaned up as best as can be managed.
     """
     # Quickly iterate over the dataframe and clean each title value
-    for i, row in df.itterows():
+    for i, row in df.iterrows():
         clean = ftfy.fix_text(df.iloc[i, col])
         df.set_value(i, 5, clean)
 
@@ -70,7 +77,7 @@ def clean_desc(df, col=0):
     # similar iteration to clean_title, but leveraging the prebuilt functions that
     # can be run on BeautifulSoup objects to parse html text
     for i, row in df.iterrows():
-        clean = BeautifulSoup(df.iloc[i, col]).text
+        clean = BeautifulSoup(df.iloc[i, col], 'html.parser').text
         df.set_value(i, 6, clean)
 
     return df
@@ -103,7 +110,7 @@ def main():
     Primary execution function.
     """
 
-    for csv in tqdm(data_path): # the tqdm() function call is only there to show progress, because I imagine running this on a large amount of large files
+    for csv in tqdm(data_files): # the tqdm() function call is only there to show progress, because I imagine running this on a large amount of large files
         name = csv[:-4] # using the filename to help generate a new file name
         df = csv_as_df(csv)
         clean_save(df, name)
