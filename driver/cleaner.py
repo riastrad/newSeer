@@ -4,7 +4,7 @@
 # @Date:   06-Mar-2017 14:03
 # @Email:  josh.erb@excella.com
 # @Last modified by:   josh.erb
-# @Last modified time: 14-Mar-2017 13:03
+# @Last modified time: 13-Apr-2017 15:04
 #
 # Code to pull data files down from EC2 instance:
 #
@@ -35,8 +35,8 @@ from bs4 import BeautifulSoup
 #   CONSTANTS
 #######################################
 
-data_path = os.getcwd() + '/data/'
-data_files = glob(data_path + '*.csv')
+data_path = os.path.abspath('data')
+data_files = glob(os.path.join(data_path, '*.csv'))
 
 #######################################
 #   FUNCTIONS
@@ -77,7 +77,11 @@ def clean_desc(df, col=0):
     # similar iteration to clean_title, but leveraging the prebuilt functions that
     # can be run on BeautifulSoup objects to parse html text
     for i, row in df.iterrows():
-        clean = BeautifulSoup(df.iloc[i, col], 'html.parser').text
+        try:
+            clean = BeautifulSoup(df.iloc[i, col], 'html.parser').text
+        except TypeError:
+            clean = ""
+
         df.set_value(i, 6, clean)
 
     return df
@@ -91,7 +95,7 @@ def clean_save(df, file_name, path=data_path):
     to avoid any unintended consequences with free text commas.
     """
     # add a title name onto the path variable
-    new_path = data_path + file_name + '_clean.tsv'
+    new_path = os.path.join(data_path, file_name + '_clean.tsv')
 
     # run each predefined function on a given data frame
     df = clean_title(df)

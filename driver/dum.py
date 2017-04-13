@@ -4,7 +4,7 @@
 # @Date:   06-Mar-2017 15:03
 # @Email:  josh.erb@excella.com
 # @Last modified by:   josh.erb
-# @Last modified time: 06-Mar-2017 15:03
+# @Last modified time: 13-Apr-2017 14:04
 
 """
 Quick script to glob up a bunch of tsv files and insert them into a local
@@ -27,8 +27,8 @@ from cleaner import csv_as_df
 #   CONSTANTS
 #######################################
 
-data_path = os.getcwd() + '/data/'
-data_files = glob(data_path + '*.tsv')
+data_path = os.path.abspath('data')
+data_files = glob(os.path.join(data_path, '*.tsv'))
 
 #######################################
 #   FUNCTIONS
