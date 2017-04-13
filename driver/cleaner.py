@@ -49,7 +49,7 @@ def csv_as_df(file_path):
     """
 
     with open(file_path, 'r') as f:
-        df = pd.read_csv(file_path)
+        df = pd.read_csv(f, header=None)
 
     return df
 
@@ -101,7 +101,7 @@ def clean_save(df, file_name, path=data_path):
     df.drop([0,4], axis=1, inplace=True)
 
     # save the file as a .tsv
-    pd.to_csv(new_path, sep='\t', header=['pull_ts', 'pubdate', 'publication', 'title', 'description'])
+    df.to_csv(new_path, sep='\t', header=['pull_ts', 'pubdate', 'publication', 'title', 'description'])
 
     return
 
@@ -111,7 +111,7 @@ def main():
     """
 
     for csv in tqdm(data_files): # the tqdm() function call is only there to show progress, because I imagine running this on a large amount of large files
-        name = csv[:-4] # using the filename to help generate a new file name
+        name = csv.split('/')[-1][:-4] # using the filename to help generate a new file name
         df = csv_as_df(csv)
         clean_save(df, name)
 
