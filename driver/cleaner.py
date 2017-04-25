@@ -4,7 +4,7 @@
 # @Date:   06-Mar-2017 14:03
 # @Email:  josh.erb@excella.com
 # @Last modified by:   josh.erb
-# @Last modified time: 13-Apr-2017 15:04
+# @Last modified time: 24-Apr-2017 21:04
 #
 # Code to pull data files down from EC2 instance:
 #
@@ -105,7 +105,7 @@ def clean_save(df, file_name, path=data_path):
     df.drop([0,4], axis=1, inplace=True)
 
     # save the file as a .tsv
-    df.to_csv(new_path, sep='\t', header=['pull_ts', 'pubdate', 'publication', 'title', 'description'])
+    df.to_csv(new_path, sep='\t', header=['pull_ts', 'pubdate', 'publication', 'title', 'description'], index=False)
 
     return
 
