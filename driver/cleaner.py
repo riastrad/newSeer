@@ -4,7 +4,7 @@
 # @Date:   06-Mar-2017 14:03
 # @Email:  josh.erb@excella.com
 # @Last modified by:   josh.erb
-# @Last modified time: 24-Apr-2017 21:04
+# @Last modified time: 24-Apr-2017 22:04
 #
 # Code to pull data files down from EC2 instance:
 #
@@ -60,7 +60,11 @@ def clean_title(df, col=4):
     """
     # Quickly iterate over the dataframe and clean each title value
     for i, row in df.iterrows():
-        clean = ftfy.fix_text(df.iloc[i, col])
+        try:    # Encountered problems with data, will need to refactor later
+            clean = ftfy.fix_text(df.iloc[i, col])
+        except TypeError:
+            clean = "Missing Title"
+
         df.set_value(i, 5, clean)
 
     return df
