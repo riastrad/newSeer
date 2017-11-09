@@ -14,4 +14,4 @@ cd newSeer
 python3 driver/cleaner.py
 
 # Load the data into a local db
-python3 newSeer/driver/dum.py
+python3 driver/dum.py

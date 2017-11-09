@@ -10,9 +10,9 @@
 Quick script to glob up a bunch of tsv files and insert them into a local
 sqlite3 database.
 
-Will only work if files have been previously cleaned using the cleaner.py script
-once this is completed and results have been validated, feel free to delete
-raw .csv files.
+Will only work if files have been previously cleaned using the cleaner.py
+script once this is completed and results have been validated, feel free to
+delete raw .csv files.
 """
 
 #######################################
@@ -22,6 +22,7 @@ raw .csv files.
 import os
 import sqlite3
 import pandas as pd
+from tqdm import tqdm
 from glob import glob
 
 #######################################
@@ -35,6 +36,7 @@ data_files = glob(os.path.join(data_path, '*.tsv'))
 #   FUNCTIONS
 #######################################
 
+
 def insert_data(file_list=data_files):
     """
     Uses pandas and sqlite to insert a dataframe into your local database.
@@ -46,7 +48,8 @@ def insert_data(file_list=data_files):
     conn = sqlite3.connect(os.path.join(data_path, 'news.db'))
 
     # add manipulation code here
-    for data in file_list:
+    # (tqdm call used to indicate progress in CLI)
+    for data in tqdm(file_list, desc='Dumping Progress'):
         # load file into df object
         df = pd.read_csv(data, sep='\t')
         # use the connection to insert the df into our db table
@@ -57,16 +60,19 @@ def insert_data(file_list=data_files):
     # close out connection
     conn.close()
 
+
 def drop_data():
     """
-    Quick function to glob the .csv files and remove them quickly. Might not use
-    this one for a while...just to make sure nothings wrong with data cleaning.
+    Quick function to glob the .csv files and remove them quickly. Might not
+    use this one for a while...just to make sure nothing is
+    wrong with data cleaning.
     """
     files = glob(os.path.join(data_path, '*.csv'))
 
     # iterate over all the .csv files and drop each one
     for data in files:
         os.remove(data)
+
 
 def main():
     """

@@ -118,7 +118,7 @@ def main():
     Primary execution function.
     """
 
-    for csv in tqdm(data_files): # the tqdm() function call is only there to show progress, because I imagine running this on a large amount of large files
+    for csv in tqdm(data_files, desc='Cleaning Progress'): # the tqdm() function call is only there to show progress, because I imagine running this on a large amount of large files
         name = csv.split('/')[-1][:-4] # using the filename to help generate a new file name
         df = csv_as_df(csv)
         clean_save(df, name)
